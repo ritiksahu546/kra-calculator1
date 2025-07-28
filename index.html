@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>KRA Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f8ff;
+      padding: 30px;
+      text-align: center;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      max-width: 400px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+    input {
+      padding: 10px;
+      margin: 10px;
+      width: 80%;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 20px;
+      color: #28a745;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>KRA Calculator</h2>
+    <input type="number" id="effcc" placeholder="Enter Eff CC (e.g. 48)" />
+    <input type="text" id="tt" placeholder="Enter Talk Time (hh:mm:ss)" />
+    <button onclick="calculateKRA()">Calculate KRA</button>
+    <div class="result" id="output"></div>
+  </div>
+
+  <script>
+    function calculateKRA() {
+      const effcc = parseFloat(document.getElementById("effcc").value);
+      const tt = document.getElementById("tt").value;
+
+      if (isNaN(effcc) || !tt.includes(":")) {
+        document.getElementById("output").innerHTML = "Please enter valid inputs.";
+        return;
+      }
+
+      const parts = tt.split(":");
+      const hours = parseInt(parts[0]) || 0;
+      const minutes = parseInt(parts[1]) || 0;
+      const seconds = parseInt(parts[2]) || 0;
+      const totalMinutes = hours * 60 + minutes + seconds / 60;
+
+      const kraEffCC = effcc / 48;
+      const kraTT = totalMinutes / 240;
+
+      let kra = (kraEffCC + kraTT) * 50;
+      kra = Math.min(kra, 100); // Cap at 100%
+
+      document.getElementById("output").innerHTML = `KRA: ${kra.toFixed(2)}%`;
+    }
+  </script>
+</body>
+</html>
