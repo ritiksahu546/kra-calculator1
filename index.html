@@ -40,7 +40,16 @@
     }
     .result {
       margin-top: 20px;
-      font-size: 20px;
+      font-size: 22px;
+      font-weight: bold;
+    }
+    .red {
+      color: #dc3545;
+    }
+    .yellow {
+      color: #ffc107;
+    }
+    .green {
       color: #28a745;
     }
   </style>
@@ -49,7 +58,7 @@
   <div class="container">
     <h2>KRA Calculator</h2>
     <input type="number" id="effcc" placeholder="Enter Eff CC (e.g. 48)" />
-    <input type="text" id="tt" placeholder="Enter Talk Time (hh:mm:ss)" />
+    <input type="number" id="tt" placeholder="Enter Talk Time in Minutes (e.g. 125)" />
     <button onclick="calculateKRA()">Calculate KRA</button>
     <div class="result" id="output"></div>
   </div>
@@ -57,26 +66,25 @@
   <script>
     function calculateKRA() {
       const effcc = parseFloat(document.getElementById("effcc").value);
-      const tt = document.getElementById("tt").value;
+      const totalMinutes = parseFloat(document.getElementById("tt").value);
+      const output = document.getElementById("output");
 
-      if (isNaN(effcc) || !tt.includes(":")) {
-        document.getElementById("output").innerHTML = "Please enter valid inputs.";
+      if (isNaN(effcc) || isNaN(totalMinutes)) {
+        output.innerHTML = "Please enter valid inputs.";
+        output.className = "result red";
         return;
       }
 
-      const parts = tt.split(":");
-      const hours = parseInt(parts[0]) || 0;
-      const minutes = parseInt(parts[1]) || 0;
-      const seconds = parseInt(parts[2]) || 0;
-      const totalMinutes = hours * 60 + minutes + seconds / 60;
-
       const kraEffCC = effcc / 48;
       const kraTT = totalMinutes / 240;
-
       let kra = (kraEffCC + kraTT) * 50;
-      kra = Math.min(kra, 100); // Cap at 100%
 
-      document.getElementById("output").innerHTML = `KRA: ${kra.toFixed(2)}%`;
+      let colorClass = "green";
+      if (kra < 100) colorClass = "red";
+      else if (kra === 100) colorClass = "yellow";
+
+      output.innerHTML = `KRA: ${kra.toFixed(2)}%`;
+      output.className = `result ${colorClass}`;
     }
   </script>
 </body>
